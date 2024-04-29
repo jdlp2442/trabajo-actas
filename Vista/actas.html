@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <main>
+      <nav
+        style="
+          height: 70px;
+          width: 100%;
+          background-color: #03045e;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 5rem;
+          border-radius: 1rem;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+          "
+        >
+          <img src="login-img.png" alt="" height="50px" width="50px" />
+          <a style="margin: 0.5rem" href="">CRUD</a>
+        </div>
+        <div style="padding: 1rem; display: flex; gap: 1rem">
+          <a href="usuarios.html">Usuarios</a>
+          <a href="actas.html">Actas</a>
+        </div>
+      </nav>
+
+      <div class="card">
+        <div
+          style="
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: center;
+            align-self: center;
+            background-color: #00b4d8;
+            padding: 2rem;
+            margin-top: 1rem;
+            border-radius: 1rem;
+          "
+        >
+          <div style="display: flex; justify-content: center">
+            <h2
+              style="font-weight: 600rem; font-size: 2rem; text-justify: center"
+            >
+              Agregar acta
+            </h2>
+          </div>
+
+          <div style="display: flex; gap: 1rem">
+            <div>
+              <p>Fecha reunion</p>
+              <input id="date" type="text" />
+
+              <p>Hora inicio</p>
+              <input id="startHour" type="text" />
+
+              <p>Hora finalizacion</p>
+              <input id="finishHour" type="text" />
+
+              <p>Asistentes</p>
+              <input id="assistants" type="text" />
+            </div>
+
+            <div>
+              <p>Asunto reunion</p>
+              <input id="matters" type="text" />
+
+              <p>Desarrollo reunion</p>
+              <textarea id="develop"></textarea>
+
+              <p>Compromisos</p>
+              <textarea id="commitments"></textarea>
+
+              <p>Responsable</p>
+              <input id="responsible" type="text" />
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              gap: 1rem;
+              margin-top: 1rem;
+            "
+          >
+            <button onclick="post()">Agregar acta</button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="load"
+        style="display: flex; gap: 1rem; background-color: #caf0f8"
+      ></div>
+    </main>
+  </body>
+</html>
+
+<style>
+  input,
+  textarea {
+    border-radius: 1rem;
+    border-width: 0;
+    padding: 10px;
+  }
+  button {
+    border-radius: 1rem;
+    border-width: 0;
+    background-color: #03045e;
+    color: white;
+    padding: 1rem;
+  }
+  .card {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .main {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .navbar {
+    width: 100%;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+    border-radius: 1rem;
+  }
+
+  a {
+    color: white;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+</style>
+
+<script type="text/javascript">
+  const d = document;
+
+  d.addEventListener("DOMContentLoaded", function () {
+    load();
+  });
+
+  const date = d.getElementById("date");
+  const startHour = d.getElementById("startHour");
+  const finishHour = d.getElementById("finishHour");
+  const assistants = d.getElementById("assistants");
+
+  const matters = d.getElementById("matters");
+  const develop = d.getElementById("develop");
+  const commitments = d.getElementById("commitments");
+  const responsible = d.getElementById("responsible");
+
+  const load = async () => {
+    const response = await fetch(
+      `http://localhost:8000?table=register&id=x&action=0`
+    );
+
+    const answer = await response.json();
+
+    const loadDiv = document.getElementById("load");
+
+    answer.forEach((element) => {
+      console.log(element);
+      loadDiv.innerHTML += `
+      <div class="card">
+        <div style="display: flex; flex-flow: column nowrap; justify-content: center; align-self: center; background-color: #00b4d8; padding: 2rem; margin-top: 1rem; border-radius: 1rem;">
+          <div style="display: flex; justify-content: center;">
+            <h2 style="font-weight: 600rem; font-size: 2rem; text-justify: center;">
+                Agregar acta
+            </h2>
+        </div>
+
+          <div style="display: flex; gap: 1rem">
+            <div>
+              <p>Fecha reunion</p>
+              <input id="${element.idregister}date" type="text" value=${element.date} />
+
+              <p>Hora inicio</p>
+              <input id="${element.idregister}startHour" type="text" value=${element.startHour} />
+
+              <p>Hora finalizacion</p>
+              <input id="${element.idregister}finishHour" type="text" value=${element.finishHour} />
+
+              <p>Asistentes</p>
+              <input id="${element.idregister}assistants" type="text" value=${element.assistants} />
+            </div>
+
+            <div>
+              <p>Asunto reunion</p>
+              <input id="${element.idregister}matters" type="text" value=${element.matters} />
+
+              <p>Desarrollo reunion</p>
+              <textarea id="${element.idregister}develop" >${element.develop}</textarea>
+
+              <p>Compromisos</p>
+              <textarea id="${element.idregister}commitments" >${element.commitments}</textarea>
+
+              <p>Responsable</p>
+              <input id="${element.idregister}responsible" type="text" value=${element.responsible} />
+            </div>
+          
+          </div>
+          <div
+          style="
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+          "
+        >
+        <button onclick="put('${element.idregister}')">Editar acta</button>
+          <button onclick="del('${element.idregister}')">Eliminar acta</button>
+        </div>
+        </div>
+      </div>
+
+        `;
+    });
+  };
+
+  const post = async () => {
+    // Objeto JSON que quieres enviar
+    const data = {
+      date: date.value,
+      startHour: startHour.value,
+      finishHour: finishHour.value,
+      assistants: assistants.value,
+
+      matters: matters.value,
+      develop: develop.value,
+      commitments: commitments.value,
+      responsible: responsible.value,
+    };
+
+    // Configurar la solicitud
+    const requestOptions = {
+      method: "POST", // Método de la solicitud
+      headers: {
+        "Content-Type": "application/json", // Tipo de contenido del cuerpo de la solicitud
+      },
+      body: JSON.stringify(data), // Convertir el objeto JSON a una cadena JSON
+    };
+
+    console.log(data);
+
+    // Realizar la solicitud utilizando fetch
+    fetch("http://localhost:8000?table=register", requestOptions)
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito!")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const del = async (idregister) => {
+    const requestOptions = {
+      method: "DELETE", // Método de la solicitud
+    };
+
+    fetch(
+      `http://localhost:8000?table=register&id=${idregister}`,
+      requestOptions
+    )
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const get = async () => {
+    fetch(`http://localhost:8000?table=register&id=${idregister.value}`)
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => {
+        console.log(data.answer[0]);
+        date2.value = data.answer[0].date;
+        startHour2.value = data.answer[0].startHour;
+        finishHour2.value = data.answer[0].finishHour;
+        assistants2.value = data.answer[0].assistants;
+
+        matters2.value = data.answer[0].matters;
+        develop2.value = data.answer[0].develop;
+        commitments2.value = data.answer[0].commitments;
+        responsible2.value = data.answer[0].responsible;
+      }) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const put = async (idregister) => {
+    const date2 = d.getElementById(idregister + "date");
+    const startHour2 = d.getElementById(idregister + "startHour");
+    const finishHour2 = d.getElementById(idregister +"finishHour");
+    const assistants2 = d.getElementById(idregister +"assistants");
+
+    const matters2 = d.getElementById(idregister +"matters");
+    const develop2 = d.getElementById(idregister +"develop");
+    const commitments2 = d.getElementById(idregister +"commitments");
+    const responsible2 = d.getElementById(idregister +"responsible");
+    // Objeto JSON que quieres enviar
+    const data = {
+      date: date2.value,
+      startHour: startHour2.value,
+      finishHour: finishHour2.value,
+      assistants: assistants2.value,
+
+      matters: matters2.value,
+      develop: develop2.value,
+      commitments: commitments2.value,
+      responsible: responsible2.value,
+    };
+
+    // Configurar la solicitud
+    const requestOptions = {
+      method: "PUT", // Método de la solicitud
+      headers: {
+        "Content-Type": "application/json", // Tipo de contenido del cuerpo de la solicitud
+      },
+      body: JSON.stringify(data), // Convertir el objeto JSON a una cadena JSON
+    };
+
+    // Realizar la solicitud utilizando fetch
+    fetch(
+      `http://localhost:8000?table=register&id=${idregister}`,
+      requestOptions
+    )
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+</script>

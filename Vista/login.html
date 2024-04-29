@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+  </head>
+
+  <body>
+    <main
+      style="
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+        align-items: center;
+        height: 95vh;
+      "
+    >
+
+    <div style="display: flex; justify-content: center; width: 80%; height: 80%; background-color: #caf0f8; border-radius: 5rem;">
+        <div style="width: 50%;">
+            <img src="login-img.png" alt="" height="100%">
+        </div>
+        <div style="width: 50%; display: flex; flex-flow: column nowrap; gap: 2rem; justify-content: center; align-items: center;">
+        <div>
+            <h2 style="text-align: center; font-size: 3rem; font-weight: 900;">Bienvenido</h2>
+        <p>Aqui podra gestionar sus usuarios y actas</p>
+        </div>
+
+        <div>
+            <label for="username">Username: </label>
+            <input type="text" placeholder="usuario" id="username">
+        </div>
+
+        <div>
+            <label for="password">Password: </label>
+            <input type="text" placeholder="password" id="password">
+        </div>
+
+        <div style="display: flex; justify-content: center;">
+            <button style="padding: .5rem 1rem; border-radius: 1rem; border-width: 0; background-color: #03045e; color: #caf0f8; font-size: 1rem;" onclick="login()">Iniciar sesion</button>
+        </div>
+        
+        </div>
+    
+    </main>
+  </body>
+</html>
+
+<style>
+
+    label{
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    input{
+        border-radius: 1rem;
+        border-width: 0;
+        padding: 1rem 1rem;
+    }
+
+</style>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.2.0/bcrypt.min.js"
+  integrity="sha512-BJZhA/ftU3DVJvbBMWZwp7hXc49RJHq0xH81tTgLlG16/OkDq7VbNX6nUnx+QY4bBZkXtJoG0b0qihuia64X0w=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<script type="text/javascript">
+  var bcrypt = dcodeIO.bcrypt;
+  const d = document;
+  const username = d.getElementById("username");
+  const password = d.getElementById("password");
+
+  async function login() {
+    const data = await fetch(
+      `http://localhost:8000?table=account&id=${username.value}`
+    );
+    const obj = await data.json();
+
+    bcrypt.compare(
+      password.value,
+      obj[0].password_2,
+      function (err, result) {
+        if (result) {
+          alert("Redirigiendo...");
+          window.location.replace("usuarios.html");
+        } else {
+          alert("Password no coinciden");
+        }
+      }
+    );
+  }
+</script>

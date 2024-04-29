@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crud de Usuarios</title>
+  </head>
+
+  <body>
+    <div class="main">
+      <nav
+        style="
+          height: 70px;
+          width: 100%;
+          background-color: #03045e;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 5rem;
+          border-radius: 1rem;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+          "
+        >
+          <img src="login-img.png" alt="" height="50px" width="50px" />
+          <a style="margin: 0.5rem" href="">CRUD</a>
+        </div>
+        <div style="padding: 1rem; display: flex; gap: 1rem">
+          <a href="usuarios.html">Usuarios</a>
+          <a href="actas.html">Actas</a>
+        </div>
+      </nav>
+
+      <div style="display: flex">
+        <div
+          style="background-color: #caf0f8; padding: 1rem; border-radius: 1rem"
+        >
+          <h2>Agregar usuario</h2>
+          <div>
+            <p for="username">Nombre de usuario</p>
+            <input type="text" id="username" />
+          </div>
+
+          <div>
+            <p for="password">Contrasenia</p>
+            <input type="text" id="password" />
+          </div>
+
+          <div class="buttons">
+            <button onclick="post()">Crear</button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="container"
+        style="
+          display: flex;
+          justify-content: flex-start;
+          align-items: start;
+          gap: 1rem;
+          width: 100%;
+          height: 100vh;
+          background-color: #90e0ef;
+        "
+      ></div>
+    </div>
+  </body>
+</html>
+
+<style>
+  .main {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+  }
+  a {
+    color: white;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+  .container {
+    border-radius: 1rem;
+    width: 40%;
+    height: 20%;
+    background-color: blue;
+    display: flex;
+    justify-content: center;
+    gap: 5rem;
+  }
+  .card {
+    display: flex;
+    flex-flow: column;
+  }
+  .buttons {
+    margin-top: 2rem;
+  }
+  button {
+    border: 0;
+    border-radius: 1rem;
+    padding: 0.7rem;
+    background-color: #0077b6;
+  }
+</style>
+
+<script type="text/javascript">
+  window.addEventListener("DOMContentLoaded", function () {
+    load();
+  });
+
+  const username = document.getElementById("username");
+  const password = document.getElementById("password");
+
+  const load = async () => {
+    const response = await fetch(
+      `http://localhost:8000?table=account&id=x&action=0`
+    );
+
+    const answer = await response.json();
+
+    console.log(answer);
+
+    const loadDiv = document.getElementById("container");
+
+    answer.forEach((element) => {
+      console.log(element);
+      loadDiv.innerHTML += `
+      <div
+          style="
+            display: flex;
+            flex-flow: column nowrap;
+            gap: 2rem;
+            width: 25%;
+            background-color: #caf0f8;
+            justify-content: center;
+            align-items: center;
+            border-radius: 1rem;
+          "
+        >
+          <div>
+            <h2>Usuario</h2>
+          </div>
+          <div>
+            <label for="">Username:</label>
+            <input id="${element.username}username" type="text" name="" value="${element.username}" />
+          </div>
+          <div>
+            <label for="">Password:</label>
+            <input id="${element.username}password" type="text" name="" value="${element.password_2}" />
+          </div>
+          <div style="display: flex; justify-content: center; gap: 1rem">
+            <button onclick="put('${element.username}username', '${element.username}', '${element.username}password')">Editar</button>
+            <button onclick="del('${element.username}')">Eliminar</button>
+          </div>
+        </div>
+        `;
+    });
+  };
+
+  const del = async (username) => {
+    const requestOptions = {
+      method: "DELETE", // Método de la solicitud
+    };
+    fetch(`http://localhost:8000?table=account&id=${username}`, requestOptions)
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const post = async () => {
+    // Objeto JSON que quieres enviar
+    const data = {
+      username: username.value,
+      password_2: password.value,
+    };
+
+    // Configurar la solicitud
+    const requestOptions = {
+      method: "POST", // Método de la solicitud
+      headers: {
+        "Content-Type": "application/json", // Tipo de contenido del cuerpo de la solicitud
+      },
+      body: JSON.stringify(data), // Convertir el objeto JSON a una cadena JSON
+    };
+
+    // Realizar la solicitud utilizando fetch
+    fetch("http://localhost:8000?table=account", requestOptions)
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const get = async () => {
+    fetch(`http://localhost:8000?table=account&id=${username2.value}`)
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => {
+        console.log(data.answer[0]);
+        username3.value = data.answer[0].username;
+        password2.value = data.answer[0].password_2;
+      }) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+
+  const put = async (id, oldUsr, pass) => {
+    const username = document.getElementById(id);
+    const password = document.getElementById(pass);
+    // Objeto JSON que quieres enviar
+    const data = {
+      username: username.value,
+      password: pass.value,
+    };
+
+    const requestOptions = {
+      method: "PUT", // Método de la solicitud
+      headers: {
+        "Content-Type": "application/json", // Tipo de contenido del cuerpo de la solicitud
+      },
+      body: JSON.stringify(data), // Convertir el objeto JSON a una cadena JSON
+    };
+
+    // Realizar la solicitud utilizando fetch
+    fetch(
+      `http://localhost:8000?table=account&id=${oldUsr}`,
+      requestOptions
+    )
+      .then((response) => response.json()) // Convertir la respuesta a JSON
+      .then((data) => alert("Exito")) // Manejar los datos de respuesta
+      .catch((error) => alert("Error:", error)); // Manejar errores
+  };
+</script>
